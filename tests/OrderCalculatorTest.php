@@ -61,22 +61,19 @@ class OrderCalculatorTest extends TestCase
     /**
      * Exception testing
      */
-    
-    public function testExceptionPriceIsNegative(): void
-    {
-        $this->expectException(InvalidArgumentException::class);
-        $order = new OrderCalculator(-10, 8, 0.2);
-    }   
 
-    public function testExceptionQuantityIsNegative(): void
+    #[DataProvider('provideExceptions')]
+    public function testOrderRaisesException(float $unitPrice, int $quantity, float $taxRate): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $order = new OrderCalculator(10, -8, 0.2);
-    }   
-
-    public function testExceptionTaxRateIsNegative(): void
+        $order = new OrderCalculator($unitPrice, $quantity, $taxRate);
+    }
+    public static function provideExceptions(): array
     {
-        $this->expectException(InvalidArgumentException::class);
-        $order = new OrderCalculator(10, 8, -0.2);
-    }   
+        return [
+            [-10, 8, 0.2],
+            [10, -8, 0.2],
+            [10, 8, -0.2]
+        ];
+    }
 }
